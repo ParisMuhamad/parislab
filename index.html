@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="id" class="dark" data-theme="cyan">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris Muhamad | Advanced Cyber & Systems Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            bg: '#070a14',
+                            card: '#0f172a',
+                            border: '#1e293b',
+                            primary: 'var(--accent-primary)',
+                            secondary: 'var(--accent-secondary)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --accent-primary: #06b6d4;
+            --accent-secondary: #3b82f6;
+            --glow-color: rgba(6, 182, 212, 0.25);
+        }
+        [data-theme="green"] {
+            --accent-primary: #10b981;
+            --accent-secondary: #059669;
+            --glow-color: rgba(16, 185, 129, 0.25);
+        }
+        [data-theme="purple"] {
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #ec4899;
+            --glow-color: rgba(139, 92, 246, 0.25);
+        }
+        [data-theme="amber"] {
+            --accent-primary: #f59e0b;
+            --accent-secondary: #d97706;
+            --glow-color: rgba(245, 158, 11, 0.25);
+        }
+
+        body {
+            background-color: #070a14;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        .glow-box {
+            box-shadow: 0 0 25px var(--glow-color);
+            transition: box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glow-box:hover {
+            box-shadow: 0 0 35px var(--glow-color);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+        }
+        .accent-text {
+            color: var(--accent-primary);
+            transition: color 0.3s ease;
+        }
+        .accent-bg {
+            background-color: var(--accent-primary);
+            transition: background-color 0.3s ease;
+        }
+        .accent-border {
+            border-color: var(--accent-primary);
+            transition: border-color 0.3s ease;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070a14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-cyan-500 selection:text-black">
+
+    <canvas id="network-canvas"></canvas>
+
+    <header class="border-b border-cyber-border bg-cyber-bg/80 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-3.5 h-3.5 rounded-full accent-bg animate-ping"></div>
+                <span class="font-mono font-bold tracking-wider accent-text text-lg">paris@parislab:~#</span>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-mono text-gray-400">
+                <a href="#about" class="hover:text-white transition-colors duration-300">~/about</a>
+                <a href="#repos" class="hover:text-white transition-colors duration-300">~/projects</a>
+                <a href="#terminal-section" class="hover:text-white transition-colors duration-300">~/cli</a>
+                <a href="#socials" class="hover:text-white transition-colors duration-300">~/nodes</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <div class="hidden sm:flex items-center space-x-1.5 bg-cyber-card border border-cyber-border p-1 rounded-full">
+                    <button onclick="setTheme('cyan')" class="w-4 h-4 rounded-full bg-cyan-500 hover:scale-125 transition-transform duration-300" title="Cyan Theme"></button>
+                    <button onclick="setTheme('green')" class="w-4 h-4 rounded-full bg-emerald-500 hover:scale-125 transition-transform duration-300" title="Green Theme"></button>
+                    <button onclick="setTheme('purple')" class="w-4 h-4 rounded-full bg-purple-500 hover:scale-125 transition-transform duration-300" title="Purple Theme"></button>
+                    <button onclick="setTheme('amber')" class="w-4 h-4 rounded-full bg-amber-500 hover:scale-125 transition-transform duration-300" title="Amber Theme"></button>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <a href="https://github.com/ParisMuhamad" target="_blank" class="p-2.5 rounded-xl glass-card text-gray-300 hover:text-white hover:border-cyan-400 transition-all duration-300" title="GitHub Profile">
+                        <i class="fab fa-github text-base"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/paris-muhamad" target="_blank" class="p-2.5 rounded-xl glass-card text-gray-300 hover:text-white hover:border-blue-400 transition-all duration-300" title="LinkedIn Network">
+                        <i class="fab fa-linkedin-in text-base"></i>
+                    </a>
+                    <a href="https://www.instagram.com/parismuhamad115?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" class="p-2.5 rounded-xl glass-card text-gray-300 hover:text-white hover:border-pink-400 transition-all duration-300" title="Instagram Portfolio">
+                        <i class="fab fa-instagram text-base"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full space-y-20 relative z-10">
+        
+        <!-- LIVE UPTIME & SYSTEM STATUS WIDGET -->
+        <div class="glass-card px-5 py-3 rounded-2xl border border-cyber-border flex flex-col sm:flex-row items-center justify-between text-xs font-mono glow-box reveal">
+            <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+                <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-white font-bold tracking-wide">parislab.my.id</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">[PRODUCTION ONLINE]</span>
+            </div>
+            <div class="flex items-center space-x-6 text-gray-300">
+                <div class="flex items-center space-x-1.5">
+                    <i class="fas fa-signal accent-text"></i>
+                    <span>Latency: <strong id="live-latency" class="text-cyan-400">14ms</strong></span>
+                </div>
+                <div class="hidden sm:inline text-gray-600">•</div>
+                <div class="flex items-center space-x-1.5">
+                    <i class="fas fa-server text-purple-400"></i>
+                    <span>Uptime: <strong class="text-emerald-400">99.99%</strong></span>
+                </div>
+                <div class="hidden sm:inline text-gray-600">•</div>
+                <div class="flex items-center space-x-1.5">
+                    <i class="fab fa-linux text-amber-400"></i>
+                    <span>Debian 12 / Nginx</span>
+                </div>
+            </div>
+        </div>
+
+        <section id="about" class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center reveal">
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-cyber-card border border-cyber-border text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full accent-bg animate-pulse"></span>
+                    <span class="text-gray-300">Future NOC (Network Operation Center) Engineer • SMK Taruna Bhakti Depok</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight font-mono leading-tight">
+                    Routing The World & <span class="accent-text">Network Infrastructure</span>.
+                </h1>
+                <p class="text-gray-400 text-lg leading-relaxed">
+                    Halo! Saya <strong class="text-white">Paris Muhamad</strong>, siswa berusia 16 tahun di <strong class="text-white">SMK Taruna Bhakti Depok</strong>. <em class="accent-text font-mono font-bold">"Routing The World"</em> — Sebagai seorang <span class="accent-text font-mono">Future NOC Engineer</span>, saya memiliki pemahaman mendalam dalam administrasi Linux Debian (Webserver, Local Repository Mirror Ubuntu/Debian, DNS, & DHCP), MikroTik Routing (Static, RIP, OSPF, Mangle dengan pemahaman alur & troubleshooting mumpuni), serta Networking & Cisco (Entry). Portofolio utama ini di-hosting di <span class="accent-text font-mono font-bold">parislab.my.id</span>, sementara seluruh arsip dan write-up proyek dikelola melalui <a href="https://websitesaya.biz.id" target="_blank" class="accent-text underline font-mono">websitesaya.biz.id</a>.
+                </p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-mono text-gray-300 pt-2">
+                    <div class="glass-card p-4 rounded-xl border border-cyber-border space-y-1">
+                        <div class="text-xs text-gray-400">PENDIDIKAN & USIA</div>
+                        <div class="text-white font-bold flex items-center space-x-2">
+                            <i class="fas fa-graduation-cap accent-text"></i>
+                            <span>16 Tahun, SMK Taruna Bhakti</span>
+                        </div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl border border-cyber-border space-y-1">
+                        <div class="text-xs text-gray-400">KONTAK EMAIL</div>
+                        <div class="text-white font-bold flex items-center space-x-2 truncate">
+                            <i class="fas fa-envelope accent-text"></i>
+                            <a href="mailto:parismuhammad115@gmail.com" class="hover:underline text-xs text-cyan-400 transition-colors">parismuhammad115@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 pt-2">
+                    <div class="glass-card p-4 rounded-xl border border-cyber-border">
+                        <div class="text-xl font-bold font-mono accent-text">Linux</div>
+                        <div class="text-[11px] text-gray-400 mt-0.5">Webserver, DNS, & DHCP</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl border border-cyber-border">
+                        <div class="text-xl font-bold font-mono accent-text">MikroTik</div>
+                        <div class="text-[11px] text-gray-400 mt-0.5">OSPF, RIP, Mangle & Flow</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl border border-cyber-border">
+                        <div class="text-xl font-bold font-mono accent-text">Cisco</div>
+                        <div class="text-[11px] text-gray-400 mt-0.5">Networking & Switch Entry</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#socials" class="px-7 py-3.5 rounded-xl accent-bg text-black font-semibold hover:opacity-90 transition-all duration-300 shadow-lg flex items-center space-x-2.5 font-mono text-sm transform hover:-translate-y-1">
+                        <i class="fas fa-comments"></i>
+                        <span>Interaksi lebih lanjut</span>
+                    </a>
+                    <a href="#terminal-section" class="px-7 py-3.5 rounded-xl glass-card border border-cyber-border font-semibold hover:border-gray-500 transition-all duration-300 flex items-center space-x-2.5 text-gray-200 font-mono text-sm transform hover:-translate-y-1">
+                        <i class="fas fa-terminal accent-text"></i>
+                        <span>Buka CLI Sandbox</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5">
+                <div class="glass-card rounded-2xl p-6 glow-box space-y-4 border border-cyber-border relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 accent-bg opacity-10 rounded-full blur-2xl"></div>
+                    <div class="flex items-center justify-between border-b border-cyber-border pb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-xs font-mono text-gray-300">NOC SYSTEM READY</span>
+                        </div>
+                        <span class="text-xs font-mono accent-text px-2 py-0.5 rounded bg-cyber-border/50">SMK TARUNA BHAKTI</span>
+                    </div>
+                    <div class="space-y-3 font-mono text-xs text-gray-300">
+                        <div class="flex justify-between border-b border-cyber-border/40 pb-2">
+                            <span class="text-gray-400">NAMA:</span>
+                            <span class="text-white font-bold">Paris Muhamad</span>
+                        </div>
+                        <div class="flex justify-between border-b border-cyber-border/40 pb-2">
+                            <span class="text-gray-400">EMAIL:</span>
+                            <span class="text-cyan-400 font-bold truncate">parismuhammad115@gmail.com</span>
+                        </div>
+                        <div class="flex justify-between border-b border-cyber-border/40 pb-2">
+                            <span class="text-gray-400">INSTITUSI:</span>
+                            <span class="accent-text">SMK Taruna Bhakti Depok</span>
+                        </div>
+                        <div class="flex justify-between border-b border-cyber-border/40 pb-2">
+                            <span class="text-gray-400">USIA:</span>
+                            <span class="text-white">16 Tahun</span>
+                        </div>
+                        <div class="flex justify-between border-b border-cyber-border/40 pb-2">
+                            <span class="text-gray-400">SPECIALTY:</span>
+                            <span class="text-cyan-400 font-bold">Future NOC & Linux Mirroring</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 block mb-1">KOMPETENSI KEAHLIAN:</span>
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                                <span class="px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-[10px] text-cyan-300">Debian Repo Mirror</span>
+                                <span class="px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-[10px] text-emerald-300">DNS & DHCP</span>
+                                <span class="px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-[10px] text-amber-300">OSPF & RIP (Routing)</span>
+                                <span class="px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-[10px] text-purple-300">Firewall Mangle</span>
+                                <span class="px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-[10px] text-blue-300">Cisco Switch Entry</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="repos" class="space-y-8 reveal">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-cyber-border pb-6">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold font-mono">Web Repository & Live Infrastructure</h2>
+                    <p class="text-gray-400 text-sm mt-1">Daftar proyek server, mirror repository, konfigurasi jaringan, dan live web domain parislab.my.id & websitesaya.biz.id.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 font-mono text-xs">
+                    <button onclick="filterRepos('all')" class="filter-btn px-4 py-2 rounded-lg bg-cyber-card border accent-border accent-text transition-all duration-300 active-tab">Semua</button>
+                    <button onclick="filterRepos('repo')" class="filter-btn px-4 py-2 rounded-lg bg-cyber-card border border-cyber-border text-gray-400 hover:text-white transition-all duration-300">Project-Paris</button>
+                    <button onclick="filterRepos('web')" class="filter-btn px-4 py-2 rounded-lg bg-cyber-card border border-cyber-border text-gray-400 hover:text-white transition-all duration-300">Live Web</button>
+                    <button onclick="filterRepos('linux')" class="filter-btn px-4 py-2 rounded-lg bg-cyber-card border border-cyber-border text-gray-400 hover:text-white transition-all duration-300">Linux Fundamental</button>
+                    <button onclick="filterRepos('mikrotik')" class="filter-btn px-4 py-2 rounded-lg bg-cyber-card border border-cyber-border text-gray-400 hover:text-white transition-all duration-300">MikroTik & Cisco</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="repo-grid">
+                
+                <div class="repo-card glass-card rounded-2xl p-6 border border-cyber-border flex flex-col justify-between hover:border-cyan-500/50 transition-all duration-300 group" data-category="web">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400">
+                                <i class="fas fa-globe text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20">Live Web Domain</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg group-hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
+                                <span>francais.my.id (Live Webserver)</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm mt-2">Platform web interaktif yang dideploy dan di-hosting pada webserver mandiri dengan domain aktif francais.my.id.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-400 pt-2">
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Webserver</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Live Deployment</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Custom Domain</span>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-cyber-border/60 flex justify-between items-center mt-6">
+                        <div class="flex items-center space-x-3 text-xs font-mono text-gray-400">
+                            <span><i class="fas fa-star text-amber-400 mr-1"></i>89</span>
+                            <span><i class="fas fa-code-branch text-blue-400 mr-1"></i>15</span>
+                        </div>
+                        <button onclick="openRepoModal('francais.my.id (Live Webserver)', 'Platform web interaktif yang dideploy dan di-hosting pada webserver mandiri dengan domain aktif francais.my.id. Klik tombol di bawah untuk langsung mengunjungi situs web live.', 'Buka Website', 'https://francais.my.id', './assets/certs/francais-domain.png')" class="text-xs font-mono accent-text hover:underline flex items-center space-x-1 transition-transform transform hover:scale-105">
+                            <span>inspect website</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="repo-card glass-card rounded-2xl p-6 border border-cyber-border flex flex-col justify-between hover:border-cyan-500/50 transition-all duration-300 group" data-category="repo">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center accent-text">
+                                <i class="fas fa-book-open text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Write-Up Domain</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg group-hover:text-cyan-400 transition-colors duration-300 flex items-center space-x-2">
+                                <span>Project-Paris</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm mt-2">Kumpulan write-up konfigurasi, catatan troubleshooting, dan proyek yang dikerjakan di lab maupun mandiri pada domain websitesaya.biz.id.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-400 pt-2">
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Lab Configuration</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Write-Ups</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Network Docs</span>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-cyber-border/60 flex justify-between items-center mt-6">
+                        <div class="flex items-center space-x-3 text-xs font-mono text-gray-400">
+                            <span><i class="fas fa-star text-amber-400 mr-1"></i>98</span>
+                            <span><i class="fas fa-code-branch text-blue-400 mr-1"></i>24</span>
+                        </div>
+                        <button onclick="openRepoModal('Project-Paris', 'Kumpulan write-up konfigurasi, catatan troubleshooting, dan dokumentasi proyek jaringan yang dikerjakan di lab maupun mandiri di websitesaya.biz.id.', 'Buka di websitesaya.biz.id', 'https://websitesaya.biz.id', './assets/certs/domain-architecture.png')" class="text-xs font-mono accent-text hover:underline flex items-center space-x-1 transition-transform transform hover:scale-105">
+                            <span>buka platform</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="repo-card glass-card rounded-2xl p-6 border border-cyber-border flex flex-col justify-between hover:border-cyan-500/50 transition-all duration-300 group" data-category="linux">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+                                <i class="fab fa-linux text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">francais.my.id</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg group-hover:text-purple-400 transition-colors duration-300 flex items-center space-x-2">
+                                <span>Linux Fundamental</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm mt-2">Keahlian mendalam dalam administrasi sistem Linux, khususnya menguasai Debian dan Ubuntu secara komprehensif.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-400 pt-2">
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Debian 12</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">APT Mirror</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">BIND9 & DHCP</span>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-cyber-border/60 flex justify-between items-center mt-6">
+                        <div class="flex items-center space-x-3 text-xs font-mono text-gray-400">
+                            <span><i class="fas fa-star text-amber-400 mr-1"></i>56</span>
+                            <span><i class="fas fa-code-branch text-blue-400 mr-1"></i>12</span>
+                        </div>
+                        <button onclick="openRepoModal('Linux Fundamental', 'Keahlian administrasi Linux mendalam mencakup Debian dan Ubuntu, manajemen server, konfigurasi layanan, serta pengelolaan sistem di francais.my.id.', 'Buka di francais.my.id', 'https://francais.my.id', './assets/certs/debian-mirror-cert.pdf')" class="text-xs font-mono accent-text hover:underline flex items-center space-x-1 transition-transform transform hover:scale-105">
+                            <span>inspect portofolio</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="repo-card glass-card rounded-2xl p-6 border border-cyber-border flex flex-col justify-between hover:border-cyan-500/50 transition-all duration-300 group" data-category="mikrotik">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                <i class="fas fa-network-wired text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Routing & Cert</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg group-hover:text-blue-400 transition-colors duration-300 flex items-center space-x-2">
+                                <span>MikroTik Routing, Mangle & Troubleshooting</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm mt-2">Penguasaan alur routing, dynamic routing (RIP & OSPF), Firewall Mangle, serta kemampuan troubleshooting sistem bersertifikat.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-400 pt-2">
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">RouterOS</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">OSPF / RIP</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Mangle / QoS</span>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-cyber-border/60 flex justify-between items-center mt-6">
+                        <div class="flex items-center space-x-3 text-xs font-mono text-gray-400">
+                            <span><i class="fas fa-star text-amber-400 mr-1"></i>74</span>
+                            <span><i class="fas fa-code-branch text-blue-400 mr-1"></i>19</span>
+                        </div>
+                        <button onclick="openRepoModalDual('MikroTik Routing, Mangle & Troubleshooting', 'Dokumentasi mendalam mengenai alur konfigurasi Routing Static & Dynamic (RIP, OSPF), manajemen paket dengan Firewall Mangle, serta verifikasi sertifikat kompetensi jaringan.', 'https://learn.idn.id/sertifikat?q=IDN-1787287521-182-77423', 'Sertifikat-1-IDN', 'https://olimpiade.mikrotik.id/validasi.php?k=17475fec3a5c9d463514', 'Sertifikat-2-OJM 2026 (Citraweb)', './assets/certs/mikrotik-routing-cert.pdf')" class="text-xs font-mono accent-text hover:underline flex items-center space-x-1 transition-transform transform hover:scale-105">
+                            <span>inspect & sertifikat</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="repo-card glass-card rounded-2xl p-6 border border-cyber-border flex flex-col justify-between hover:border-cyan-500/50 transition-all duration-300 group" data-category="mikrotik">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                                <i class="fas fa-ethernet text-lg"></i>
+                            </div>
+                            <span class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Cisco Entry</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg group-hover:text-emerald-400 transition-colors duration-300 flex items-center space-x-2">
+                                <span>Networking & Cisco (Entry)</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm mt-2">Pemahaman fundamental networking dan perangkat Cisco, pengoperasian CLI switch/router, serta sertifikasi pendukung.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-400 pt-2">
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Cisco IOS</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Subnetting</span>
+                            <span class="px-2 py-1 rounded bg-cyber-bg border border-cyber-border">Switching Entry</span>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-cyber-border/60 flex justify-between items-center mt-6">
+                        <div class="flex items-center space-x-3 text-xs font-mono text-gray-400">
+                            <span><i class="fas fa-star text-amber-400 mr-1"></i>52</span>
+                            <span><i class="fas fa-code-branch text-blue-400 mr-1"></i>13</span>
+                        </div>
+                        <button onclick="openRepoModalDual('Networking & Cisco (Entry)', 'Arsip pemahaman Networking fundamental dan Cisco Packet Tracer/perangkat fisik, lengkap dengan pratinjau sertifikat NetAcad & IDN.', 'https://www.credly.com/badges/76dbbef5-26f9-4534-bd9e-249ad89d218f', 'Sertifikat-1-NetAcad', 'https://learn.idn.id/sertifikat?q=LIDN-3861444896', 'Sertifikat-2-IDN', './assets/certs/cisco-networking-cert.pdf')" class="text-xs font-mono accent-text hover:underline flex items-center space-x-1 transition-transform transform hover:scale-105">
+                            <span>inspect & sertifikat</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="terminal-section" class="space-y-6 reveal">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl sm:text-3xl font-bold font-mono">Interactive CLI Sandbox</h2>
+                <p class="text-gray-400 text-sm">Ketik perintah langsung untuk mengakses informasi sistem, materi jaringan, atau parislab.my.id.</p>
+            </div>
+
+            <div class="glass-card rounded-2xl border border-cyber-border overflow-hidden glow-box max-w-4xl mx-auto">
+                <div class="bg-cyber-bg px-6 py-4 border-b border-cyber-border flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <span class="ml-2 font-mono text-xs text-gray-400">bash - paris@parislab:~</span>
+                    </div>
+                    <div class="flex space-x-2 text-xs font-mono text-gray-400">
+                        <span class="cursor-pointer hover:text-white transition-colors" onclick="runPresetCmd('help')">help</span>
+                        <span>•</span>
+                        <span class="cursor-pointer hover:text-white transition-colors" onclick="runPresetCmd('skills')">skills</span>
+                        <span>•</span>
+                        <span class="cursor-pointer hover:text-white transition-colors" onclick="runPresetCmd('contact')">contact</span>
+                        <span>•</span>
+                        <span class="cursor-pointer hover:text-white transition-colors" onclick="runPresetCmd('clear')">clear</span>
+                    </div>
+                </div>
+                <div class="p-6 font-mono text-sm space-y-3 h-72 overflow-y-auto" id="terminal-output">
+                    <p class="text-gray-400">Terminal parislab.my.id aktif. Ketik <span class="accent-text font-bold">'help'</span> untuk melihat daftar perintah.</p>
+                    <div class="space-y-2" id="terminal-history"></div>
+                </div>
+                <div class="p-4 bg-cyber-bg/70 border-t border-cyber-border flex items-center space-x-3">
+                    <span class="accent-text font-mono text-sm">guest@parislab:~$</span>
+                    <input type="text" id="terminal-input" class="bg-transparent font-mono text-sm focus:outline-none w-full text-gray-100" placeholder="ketik perintah di sini...">
+                </div>
+            </div>
+        </section>
+
+        <section id="socials" class="space-y-8 reveal">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl sm:text-3xl font-bold font-mono">Social & Repository Nodes</h2>
+                <p class="text-gray-400 text-sm">Hubungkan koneksi langsung ke platform sosial dan web repository eksternal saya.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <a href="https://github.com/ParisMuhamad" target="_blank" class="glass-card p-6 rounded-2xl border border-cyber-border hover:border-cyan-400 transition-all duration-300 transform hover:-translate-y-2 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-6 text-gray-700 group-hover:text-cyan-500/20 transition-colors duration-300 text-5xl">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <div class="space-y-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+                            <i class="fab fa-github text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl group-hover:text-cyan-400 transition-colors">GitHub</h3>
+                            <p class="text-xs text-gray-400 mt-1">Source Code & Open Source</p>
+                        </div>
+                        <div class="flex items-center text-xs font-mono text-cyan-400 pt-2 space-x-1">
+                            <span>connect_repository()</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://www.linkedin.com/in/paris-muhamad" target="_blank" class="glass-card p-6 rounded-2xl border border-cyber-border hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-2 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-6 text-gray-700 group-hover:text-blue-500/20 transition-colors duration-300 text-5xl">
+                        <i class="fab fa-linkedin-in"></i>
+                    </div>
+                    <div class="space-y-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                            <i class="fab fa-linkedin-in text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl group-hover:text-blue-400 transition-colors">LinkedIn</h3>
+                            <p class="text-xs text-gray-400 mt-1">Professional Career & Network</p>
+                        </div>
+                        <div class="flex items-center text-xs font-mono text-blue-400 pt-2 space-x-1">
+                            <span>connect_network()</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://www.instagram.com/parismuhamad115?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" class="glass-card p-6 rounded-2xl border border-cyber-border hover:border-pink-400 transition-all duration-300 transform hover:-translate-y-2 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-6 text-gray-700 group-hover:text-pink-500/20 transition-colors duration-300 text-5xl">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <div class="space-y-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl group-hover:text-pink-400 transition-colors">Instagram Portfolio</h3>
+                            <p class="text-xs text-gray-400 mt-1">Visual Design & Tech Insights</p>
+                        </div>
+                        <div class="flex items-center text-xs font-mono text-pink-400 pt-2 space-x-1">
+                            <span>connect_visuals()</span>
+                            <i class="fas fa-arrow-right text-[10px]"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-cyber-border py-8 mt-20 text-center text-xs font-mono text-gray-500 relative z-10">
+        <p>&copy; 2026 Paris Muhamad. parislab.my.id (Portfolio) & websitesaya.biz.id (Projects). All rights reserved.</p>
+    </footer>
+
+    <div id="repo-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 scale-95">
+        <div class="glass-card border border-cyber-border rounded-2xl max-w-lg w-full p-6 space-y-6 relative">
+            <button onclick="closeRepoModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="space-y-2">
+                <span class="text-xs font-mono accent-text px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border">websitesaya.biz.id Inspector & Cert</span>
+                <h3 id="modal-title" class="text-xl font-bold font-mono">Project Name</h3>
+            </div>
+            <p id="modal-desc" class="text-gray-300 text-sm leading-relaxed">Description goes here...</p>
+            
+            <div class="p-4 rounded-xl bg-cyber-bg border border-cyber-border space-y-2">
+                <div class="flex items-center justify-between text-xs font-mono">
+                    <span class="text-gray-400"><i class="fas fa-certificate accent-text mr-1.5"></i>VERIFIED CERTIFICATE / ASSET PATH:</span>
+                    <span class="text-emerald-400 font-bold">SECURE READY</span>
+                </div>
+                <div class="text-[11px] font-mono text-cyan-300 truncate bg-cyber-card p-2 rounded border border-cyber-border" id="modal-cert-path">
+                    ./assets/certs/default.pdf
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-cyber-border flex flex-col gap-2.5" id="modal-footer-actions">
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 glass-card border border-cyber-border text-gray-200 px-4 py-3 rounded-xl shadow-xl font-mono text-xs z-50 flex items-center space-x-3">
+        <i class="fas fa-terminal accent-text text-sm"></i>
+        <span id="toast-message">Notification message</span>
+    </div>
+
+    <script>
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(section => {
+            observer.observe(section);
+        });
+
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.6;
+                this.vy = (Math.random() - 0.5) * 0.6;
+                this.radius = Math.random() * 1.5 + 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim();
+                ctx.globalAlpha = 0.4;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim();
+                        ctx.globalAlpha = (1 - (dist / 130)) * 0.15;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        function setTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            showToast(`Tema sistem diubah ke: ${themeName}`);
+        }
+
+        function filterRepos(category) {
+            const cards = document.querySelectorAll('.repo-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => {
+                btn.classList.remove('accent-border', 'accent-text');
+                btn.classList.add('border-cyber-border', 'text-gray-400');
+            });
+            event.target.classList.add('accent-border', 'accent-text');
+            event.target.classList.remove('border-cyber-border', 'text-gray-400');
+
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'flex';
+                    card.classList.add('reveal', 'active');
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function openRepoModal(title, desc, primaryText, primaryLink, certPath) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-desc').textContent = desc;
+            document.getElementById('modal-cert-path').textContent = certPath;
+            
+            const footerActions = document.getElementById('modal-footer-actions');
+            footerActions.innerHTML = '';
+
+            if (primaryLink) {
+                const btn1 = document.createElement('a');
+                btn1.href = primaryLink;
+                btn1.target = '_blank';
+                btn1.className = 'w-full py-3 px-4 rounded-xl accent-bg text-black font-mono text-xs font-semibold hover:opacity-90 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg transform hover:-translate-y-0.5';
+                btn1.innerHTML = `<i class="fas fa-external-link-alt"></i><span>${primaryText}</span>`;
+                footerActions.appendChild(btn1);
+            }
+
+            const closeBtn = document.createElement('button');
+            closeBtn.onclick = closeRepoModal;
+            closeBtn.className = 'w-full py-3 px-4 rounded-xl bg-cyber-card border border-cyber-border font-mono text-xs text-gray-300 hover:text-white transition-colors flex items-center justify-center space-x-2';
+            closeBtn.innerHTML = `<i class="fas fa-times"></i><span>Tutup</span>`;
+            footerActions.appendChild(closeBtn);
+
+            const modal = document.getElementById('repo-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+            modal.classList.add('scale-100');
+        }
+
+        function openRepoModalDual(title, desc, link1, text1, link2, text2, certPath) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-desc').textContent = desc;
+            document.getElementById('modal-cert-path').textContent = certPath;
+            
+            const footerActions = document.getElementById('modal-footer-actions');
+            footerActions.innerHTML = '';
+
+            if (link1) {
+                const btn1 = document.createElement('a');
+                btn1.href = link1;
+                btn1.target = '_blank';
+                btn1.className = 'w-full py-3 px-4 rounded-xl accent-bg text-black font-mono text-xs font-semibold hover:opacity-90 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg transform hover:-translate-y-0.5';
+                btn1.innerHTML = `<i class="fas fa-certificate"></i><span>${text1}</span>`;
+                footerActions.appendChild(btn1);
+            }
+
+            if (link2) {
+                const btn2 = document.createElement('a');
+                btn2.href = link2;
+                btn2.target = '_blank';
+                btn2.className = 'w-full py-3 px-4 rounded-xl bg-cyber-card border accent-border accent-text font-mono text-xs font-semibold hover:bg-cyber-bg transition-all duration-300 flex items-center justify-center space-x-2 transform hover:-translate-y-0.5';
+                btn2.innerHTML = `<i class="fas fa-award"></i><span>${text2}</span>`;
+                footerActions.appendChild(btn2);
+            }
+
+            const closeBtn = document.createElement('button');
+            closeBtn.onclick = closeRepoModal;
+            closeBtn.className = 'w-full py-3 px-4 rounded-xl bg-cyber-card border border-cyber-border font-mono text-xs text-gray-300 hover:text-white transition-colors flex items-center justify-center space-x-2';
+            closeBtn.innerHTML = `<i class="fas fa-times"></i><span>Tutup</span>`;
+            footerActions.appendChild(closeBtn);
+
+            const modal = document.getElementById('repo-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+            modal.classList.add('scale-100');
+        }
+
+        function closeRepoModal() {
+            const modal = document.getElementById('repo-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+            modal.classList.remove('scale-100');
+        }
+
+        const inputField = document.getElementById('terminal-input');
+        const historyContainer = document.getElementById('terminal-history');
+        const terminalOutput = document.getElementById('terminal-output');
+
+        const commands = {
+            help: "Perintah tersedia:<br>- <span class='accent-text'>about</span>: Profil singkat Paris Muhamad (Future NOC Engineer)<br>- <span class='accent-text'>skills</span>: Debian WebServer, Local Repo, DNS, DHCP, MikroTik Routing<br>- <span class='accent-text'>contact</span>: Email & Kontak Langsung<br>- <span class='accent-text'>repo</span>: Info platform websitesaya.biz.id & Project-Paris<br>- <span class='accent-text'>socials</span>: Tautan GitHub, LinkedIn & Instagram<br>- <span class='accent-text'>clear</span>: Bersihkan terminal",
+            about: "Paris Muhamad, 16 tahun, Future NOC Engineer di SMK Taruna Bhakti Depok. Routing The World!",
+            skills: "Linux Server: Debian WebServer, Local Repo Mirror (Ubuntu/Debian), DNS/DHCP<br>MikroTik: Static & Dynamic Routing (RIP, OSPF), Firewall Mangle, Troubleshooting<br>Cisco: Fundamental Networking, Cisco IOS & Switch Entry",
+            contact: "📧 Email Pribadi: <a href='mailto:parismuhammad115@gmail.com' class='accent-text underline'>parismuhammad115@gmail.com</a><br>🌐 Web Hosting: <span class='accent-text'>parislab.my.id</span>",
+            repo: "🔗 Project-Paris & Write-Up Hub: <a href='https://websitesaya.biz.id' target='_blank' class='accent-text underline'>websitesaya.biz.id</a><br>Pusat dokumentasi materi lab, write-up konfigurasi, dan mirror repository.",
+            socials: "🔗 GitHub: github.com/ParisMuhamad<br>💼 LinkedIn: linkedin.com/in/paris-muhamad<br>📸 Instagram: instagram.com/parismuhamad115"
+        };
+
+        inputField.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = inputField.value.trim().toLowerCase();
+                if (cmd === '') return;
+
+                const userLine = document.createElement('div');
+                userLine.innerHTML = `<span class="text-gray-500">guest@parislab:~$</span> <span class="text-gray-200">${escapeHtml(inputField.value)}</span>`;
+                historyContainer.appendChild(userLine);
+
+                const responseLine = document.createElement('div');
+                responseLine.className = "text-gray-300 mt-1 mb-2";
+
+                if (cmd === 'clear') {
+                    historyContainer.innerHTML = '';
+                } else if (commands[cmd]) {
+                    responseLine.innerHTML = commands[cmd];
+                    historyContainer.appendChild(responseLine);
+                } else {
+                    responseLine.innerHTML = `<span class="text-red-400">Command not found: ${escapeHtml(cmd)}. Ketik 'help' untuk bantuan.</span>`;
+                    historyContainer.appendChild(responseLine);
+                }
+
+                inputField.value = '';
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+        });
+
+        function runPresetCmd(cmd) {
+            inputField.value = cmd;
+            inputField.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msgSpan = document.getElementById('toast-message');
+            msgSpan.textContent = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Live Latency fluctuation simulator for professional NOC vibe
+        setInterval(() => {
+            const latElem = document.getElementById('live-latency');
+            if (latElem) {
+                const randomLat = Math.floor(Math.random() * 6) + 12; // 12ms to 17ms
+                latElem.textContent = randomLat + 'ms';
+            }
+        }, 4000);
+    </script>
+</body>
+</html>
